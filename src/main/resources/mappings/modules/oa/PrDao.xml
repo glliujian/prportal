@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.dao.PrDao">
+	
+    <sql id="prColumns">
+		a.*,
+		u.id AS "createBy.id",
+		u.name AS "createBy.name",
+		o.id AS "createBy.office.id",
+		o.name AS "createBy.office.name"
+	</sql>
+	
+	<sql id="prJoins">
+		JOIN sys_user u ON u.id = a.create_by
+		JOIN sys_office o ON o.id = u.office_id
+    </sql>
+    
+    <select id="get" resultType="Pr">
+		SELECT 
+			<include refid="prColumns"/>
+		FROM oa_pr a
+		<include refid="prJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Pr">
+		SELECT 
+			<include refid="prColumns"/>
+		FROM oa_pr a
+		<include refid="prJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+		<if test="createDateStart != null">
+			AND a.create_date &gt;= #{createDateStart}
+		</if>
+		<if test="createDateEnd != null">
+			AND a.create_date &lt;= #{createDateEnd}
+		</if>		
+		<if test="ids != null and ids != ''">
+			AND a.id IN (${ids})
+		</if>
+		${sqlMap.dsf}
+		ORDER BY a.id DESC
+	</select>
+	
+	<select id="findAllList" resultType="Pr">
+		SELECT 
+			<include refid="prColumns"/>
+		FROM oa_pr a
+		<include refid="prJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+		ORDER BY a.id DESC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_pr(
+			id, 
+			apply_time, 
+			create_by, 
+			create_date, 
+			update_by, 
+			update_date, 
+			remarks, 
+			del_flag,
+			cost_center,
+			process_instance_id,
+			payee_company,
+			application_no,
+			po_no,
+			transfer_no,
+			equipment,
+			brand,
+			model_no,
+			supplier,
+			unit_price,
+			quantity,
+			request_status,
+			request_arrival_date,
+			import_method,
+			actual_arrival_date,
+			budget_type,
+			purchase_location,
+			paid_by_finance,
+			price_amount,
+			<!-- Add by j 20170608 begin -->
+			purchase_purpose,
+			return_on_investment,
+			budget_rest_situation,
+			apply_site_code,
+			expense_type,
+			last_time_buy_same_equipment,
+			apply_user_department_name,
+			price_currency,
+			equipment_desciption,
+			attachment,
+			attachment2,
+			attachment3,
+			attachment4,
+			seq_,
+			requester_name,
+			payment_special,
+			request_user_department,
+			contract_company,
+			final_book_company,
+			asset_group,
+			docu_type
+			<!-- end -->
+		) VALUES (
+			#{id}, 
+			#{createDate}, 
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate}, 
+			#{remarks}, 
+			#{delFlag},
+			#{costCenter},
+			#{processInstanceId},
+			#{payeeCompany},
+			#{applicationNo},
+			#{poNo},
+			#{transferNo},
+			#{equipment},
+			#{brand},
+			#{modelNo},
+			#{supplier},
+			#{unitPrice},
+			#{quantity},
+			#{requestStatus},
+			#{requestArrivalDate},
+			#{importMethod},
+			#{actualArrivalDate},
+			#{budgetType},
+			#{purchaseLocation},
+			#{paidByFinance},
+			#{priceAmount},			
+			<!-- Add by j 20170608 begin -->
+			#{purchasePurpose},
+			#{returnOnInvestment},
+			#{budgetRestSituation},
+			#{applySiteCode},
+			#{expenseType},
+			#{lastTimeBuySameEquipment},
+			#{applyUserDepartmentName},
+			#{priceCurrency},
+			#{equipmentDesciption},
+			#{attachment},
+			#{attachment2},
+			#{attachment3},
+			#{attachment4},
+			#{seq},
+			#{requesterName},
+			#{paymentSpecial},
+			#{requestUserDepartment},
+			#{contractCompany},
+			#{finalBookCompany},
+			#{assetGroup},
+			#{docuType}
+			<!-- end -->
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_pr SET 
+			cost_center = #{costCenter}, 
+			payee_company = #{payeeCompany}, 
+			application_no = #{applicationNo},
+			po_no = #{poNo}, 
+			transfer_no = #{transferNo},
+			equipment = #{equipment},
+			brand = #{brand},
+			model_no = #{modelNo},
+			supplier = #{supplier},
+			unit_price = #{unitPrice},
+			quantity = #{quantity},
+			request_status = #{requestStatus},
+			request_arrival_date = #{requestArrivalDate},
+			import_method = #{importMethod},
+			actual_arrival_date = #{actualArrivalDate},
+			budget_type = #{budgetType},
+			price_amount = #{priceAmount}, 			
+			purchase_location = #{purchaseLocation},
+			paid_by_finance = #{paidByFinance},
+			<!-- add by J 2017/6/8 begin -->
+			purchase_purpose = #{purchasePurpose},
+			return_on_investment = #{returnOnInvestment},
+			budget_rest_situation = #{budgetRestSituation},
+			apply_site_code = #{applySiteCode},
+			expense_type = #{expenseType},
+			last_time_buy_same_equipment = #{lastTimeBuySameEquipment},
+			apply_user_department_name = #{applyUserDepartmentName},
+			price_currency = #{priceCurrency}, 
+			equipment_desciption = #{equipmentDesciption},
+			attachment = #{attachment},
+			attachment2 = #{attachment2},
+			attachment3 = #{attachment3},
+			attachment4 = #{attachment4},
+			seq_ = #{seq},
+			requester_name = #{requesterName},
+			payment_special= #{paymentSpecial},
+			request_user_department = #{requestUserDepartment},
+			contract_company = #{contractCompany},
+			final_book_company=#{finalBookCompany},
+			asset_group = #{assetGroup},
+			docu_type = #{docuType},
+			<!-- end -->
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+		
+	<update id="updateProcessInstanceId">
+		UPDATE oa_pr SET 
+			process_instance_id = #{processInstanceId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM oa_pr 
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteByLogic">
+		UPDATE oa_pr SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getDraft" resultType="Pr">
+		SELECT 
+			<include refid="prColumns"/>
+		FROM oa_pr a
+		<include refid="prJoins"/>
+		WHERE a.del_flag = 0 and a.create_by = #{userId} and process_instance_id is null
+		ORDER BY a.create_date
+	</select>
+	
+	<select id="findPRPO" resultType="Pr">
+		SELECT 
+			<include refid="prColumns"/>
+		FROM oa_pr a
+		<include refid="prJoins"/>
+		WHERE a.del_flag = 0 and a.application_no = #{PRPO}
+	</select>
+	
+	<select id="getList" resultType="Pr">
+		
+			select a.*,c.login_name as loginName,b.assignee_ as assignee,case  when b.id_ is null then 'Done' else 'In Progress' end as Status from oa_pr a
+			left join act_ru_task b on a.process_instance_id = b.proc_inst_id_
+			inner join sys_user c on a.create_by = c.id
+			where a.del_flag = 0 and a.process_instance_id is not null		
+		<if test="applicationNo != null and applicationNo != ''">
+			AND a.application_no like CONCAT('%',#{applicationNo,jdbcType=VARCHAR}, '%')
+		</if>
+		<if test="assignee != null and assignee!=''">
+			AND b.ASSIGNEE_ like CONCAT('%',#{assignee,jdbcType=VARCHAR}, '%')
+		</if>
+		
+		<if test="applySiteCode!=null and applySiteCode!=''">
+			and a.apply_site_code like CONCAT('%',#{applySiteCode,jdbcType=VARCHAR}, '%')
+		</if>
+		
+		<if test="requestUserDepartment!=null and requestUserDepartment!=''">
+			and a.request_user_department like CONCAT('%',#{requestUserDepartment,jdbcType=VARCHAR}, '%')
+		</if>
+		
+		<if test="loginName!=null and loginName!=''">
+			and c.login_name like CONCAT('%',#{loginName,jdbcType=VARCHAR}, '%')
+		</if>
+		<if test="endDate!=null">
+			and a.create_date &lt;= #{endDate,jdbcType=DATE}
+		</if>
+		
+		<if test="beginDate!=null">
+			and a.create_date &gt;= #{beginDate,jdbcType=DATE}
+		</if>
+		
+		<if test="status!=null and status!=''">
+			<choose>
+				<when test="status=='DONE'">
+					and b.id_ is null
+				</when>
+				<when test="status=='IN PROGRESS'">
+					and b.id_ is not null
+				</when>
+			</choose>
+			
+		</if>
+		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy} 
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	
+</mapper>

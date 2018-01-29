@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.sys.dao.SysSimpleLanguageDao">
+    
+	<sql id="sysSimpleLanguageColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.code AS "code",
+		a.cn AS "cn",
+		a.hk AS "hk",
+		a.en AS "en",
+		a.vn AS "vn",
+		a.cam AS "cam",
+		a.is_save_to_page AS "isSaveToPage"
+	</sql>
+	
+	<sql id="sysSimpleLanguageJoins">
+	</sql>
+	
+    
+	<select id="get" resultType="SysSimpleLanguage" >
+		SELECT 
+			<include refid="sysSimpleLanguageColumns"/>
+		FROM sys_simple_language a
+		<include refid="sysSimpleLanguageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SysSimpleLanguage" >
+		SELECT 
+			<include refid="sysSimpleLanguageColumns"/>
+		FROM sys_simple_language a
+		<include refid="sysSimpleLanguageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="cn != null and cn != ''">
+				AND (a.code like concat('%',#{cn},'%') or a.cn like concat('%',#{cn},'%') or a.en like concat('%',#{cn},'%') or a.hk like concat('%',#{cn},'%') or a.vn like concat('%',#{cn},'%') or a.cam like concat('%',#{cn},'%'))
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="isSaveToPage != null and isSaveToPage != ''">
+				<if test="isSaveToPage == '1'.toString()">
+					AND a.is_save_to_page = #{isSaveToPage}
+				</if>
+				<if test="isSaveToPage != '1'.toString()">
+					AND  (  a.is_save_to_page  is null 
+						or  a.is_save_to_page='' 
+						or  a.is_save_to_page = '0')
+				</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysSimpleLanguage" >
+		SELECT 
+			<include refid="sysSimpleLanguageColumns"/>
+		FROM sys_simple_language a
+		<include refid="sysSimpleLanguageJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="isSaveToPage != null and isSaveToPage != ''">
+				<if test="isSaveToPage == '1'.toString()">
+					AND a.is_save_to_page = #{isSaveToPage}
+				</if>
+				<if test="isSaveToPage != '1'.toString()">
+					AND  (  a.is_save_to_page  is null 
+						or  a.is_save_to_page='' 
+						or  a.is_save_to_page = '0')
+				</if>
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_simple_language(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			code,
+			cn,
+			hk,
+			en,
+			vn,
+			cam,
+			is_save_to_page
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{code},
+			#{cn},
+			#{hk},
+			#{en},
+			#{vn},
+			#{cam},
+			#{isSaveToPage}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_simple_language SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			code = #{code},
+			cn = #{cn},
+			hk = #{hk},
+			en = #{en},
+			vn = #{vn},
+			cam = #{cam},
+			is_save_to_page = #{isSaveToPage}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM sys_simple_language
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE sys_simple_language SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="SysSimpleLanguage" statementType="STATEMENT">
+		select * FROM sys_simple_language  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

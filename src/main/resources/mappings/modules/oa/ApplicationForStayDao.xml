@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.dao.ApplicationForStayDao">
+    
+	<sql id="applicationForStayColumns">
+	    a.process_instance_id AS "processInstanceId",
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.gender AS "gender",
+		a.position AS "position",
+		a.native_place AS "nativePlace",
+		a.reason AS "reason",
+		a.number_of_days AS "days",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.first_approver AS "firstApprover",
+		a.first_approver_date AS "firstApproverDate",
+		a.second_approver AS "SecondApprover",
+		a.second_approver_date AS "SecondApproverDate",
+		a.check_in_time AS "checkInTime",
+		a.check_out_time AS "checkOutTime",
+		a.check_in_dormitory_administrator AS "checkInDormitoryAdministrator",
+		a.check_out_dormitory_administrator AS "checkOutDormitoryAdministrator",
+		a.room_no AS "roomNo",
+		a.cost AS "cost",
+		a.payer AS "payer"
+	</sql>
+	
+	<sql id="applicationForStayJoins">
+	</sql>
+	
+    
+	<select id="get" resultType="ApplicationForStay" >
+		SELECT 
+			<include refid="applicationForStayColumns"/>
+		FROM oa_application_for_stay a
+		<include refid="applicationForStayJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ApplicationForStay" >
+		SELECT 
+			<include refid="applicationForStayColumns"/>
+		FROM oa_application_for_stay a
+		<include refid="applicationForStayJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="gender != null and gender != ''">
+				AND a.gender = #{gender}
+			</if>
+			<if test="position != null and position != ''">
+				AND a.position = #{position}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND a.start_time = #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND a.end_time = #{endTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ApplicationForStay" >
+		SELECT 
+			<include refid="applicationForStayColumns"/>
+		FROM oa_application_for_stay a
+		<include refid="applicationForStayJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_application_for_stay(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			process_instance_id,
+			gender,
+			position,
+			native_place,
+			reason,
+			number_of_days,
+			start_time,
+			end_time,
+			first_approver,
+			first_approver_date,
+			second_approver,
+			second_approver_date,
+			check_in_time,
+			check_out_time,
+			check_in_dormitory_administrator,
+			check_out_dormitory_administrator,
+			room_no,
+			cost,
+			payer
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{processInstanceId},
+			#{gender},
+			#{position},
+			#{nativePlace},
+			#{reason},
+			#{days},
+			#{startTime},
+			#{endTime},
+			#{firstApprover},
+			#{firstApproverDate},
+			#{SecondApprover},
+			#{SecondApproverDate},
+			#{checkInTime},
+			#{checkOutTime},
+			#{checkInDormitoryAdministrator},
+			#{checkOutDormitoryAdministrator},
+			#{roomNo},
+			#{cost},
+			#{payer}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_application_for_stay SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			process_instance_id = #{processInstanceId}, 
+			gender = #{gender},
+			position = #{position},
+			native_place = #{nativePlace},
+			reason = #{reason},
+			number_of_days = #{days},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			first_approver = #{firstApprover},
+			first_approver_date = #{firstApproverDate},
+			second_approver = #{SecondApprover},
+			second_approver_date = #{SecondApproverDate},
+			check_in_time = #{checkInTime},
+			check_out_time = #{checkOutTime},
+			check_in_dormitory_administrator = #{checkInDormitoryAdministrator},
+			check_out_dormitory_administrator = #{checkOutDormitoryAdministrator},
+			room_no = #{roomNo},
+			cost = #{cost},
+			payer = #{payer}
+		WHERE id = #{id}
+	</update>
+	 
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM oa_application_for_stay
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE oa_application_for_stay SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ApplicationForStay" statementType="STATEMENT">
+		select * FROM oa_application_for_stay  where ${propertyName} = '${value}'
+	</select>
+	
+	<update id="updateProcessInstanceId">
+		UPDATE oa_application_for_stay SET 
+			process_instance_id = #{processInstanceId}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

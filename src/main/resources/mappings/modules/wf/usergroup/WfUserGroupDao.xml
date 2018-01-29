@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.wf.dao.usergroup.WfUserGroupDao">
+    
+	<sql id="wfUserGroupColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.company AS "company.id",
+		a.department AS "department.id",
+		a.proc_def_key AS "procDefKey",
+		a.user_group AS "userGroup",
+		a.user AS "user.id",		
+		<!-- end -->
+		company.name AS "company.name",
+		department.name AS "department.name",
+		user.name AS "user.name"
+	</sql>
+	
+	<sql id="wfUserGroupJoins">
+		LEFT JOIN sys_office company ON company.id = a.company
+		LEFT JOIN sys_office department ON department.id = a.department
+		LEFT JOIN sys_user user ON user.id = a.user
+	</sql>
+	
+    
+	<select id="get" resultType="WfUserGroup" >
+		SELECT 
+			<include refid="wfUserGroupColumns"/>
+		FROM wf_user_group a
+		<include refid="wfUserGroupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WfUserGroup" >
+		SELECT 
+			<include refid="wfUserGroupColumns"/>
+		FROM wf_user_group a
+		<include refid="wfUserGroupJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="company != null and company.id != null and company.id != ''">
+				AND a.company = #{company.id}
+			</if>
+			<if test="department != null and department.id != null and department.id != ''">
+				AND a.department = #{department.id}
+			</if>
+			<if test="procDefKey != null and procDefKey != ''">
+				AND a.proc_def_key = #{procDefKey}
+			</if>
+			<if test="userGroup != null and userGroup != ''">
+				AND a.user_group = #{userGroup}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WfUserGroup" >
+		SELECT 
+			<include refid="wfUserGroupColumns"/>
+		FROM wf_user_group a
+		<include refid="wfUserGroupJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wf_user_group(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			company,
+			department,
+			proc_def_key,
+			user_group,
+			user
+			<!-- end -->
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{company.id},
+			#{department.id},
+			#{procDefKey},
+			#{userGroup},
+			#{user.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wf_user_group SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			company = #{company.id},
+			department = #{department.id},
+			proc_def_key = #{procDefKey},
+			user_group = #{userGroup},
+			user = #{user.id}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wf_user_group
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wf_user_group SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WfUserGroup" statementType="STATEMENT">
+		select * FROM wf_user_group  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

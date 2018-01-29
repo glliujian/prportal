@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.dao.TripDao">
+    
+	<sql id="tripColumns">
+		a.id AS "id",
+		a.process_instance_id AS "processInstanceId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.trip_begin_date AS "tripBeginDate",
+		a.trip_end_date AS "tripEndDate",
+		a.dest_addr AS "destAddr",
+		a.purposes AS "purposes",
+		a.arrangements AS "arrangements",
+		a.depart_manager AS "departManager",
+		a.depart_manager_opinion AS "departManagerOpinion",
+		a.general_manager AS "generalManager",
+		a.general_manager_opinion AS "generalManagerOpinion",
+		a.usr_id AS "usrId",
+		a.en_name AS "enName",
+		a.ch_name AS "chName",
+		a.staff_no AS "staffNo",
+		a.department AS "department",
+		a.joined_date AS "joinedDate",
+		a.ext_no AS "extNo",
+		a.depart_audit_date AS "departAuditDate",
+		a.general_audit_date AS "generalAuditDate",
+		a.hr_receive_date AS "hrReceiveDate",
+		a.handled_by AS "handledBy",
+		a.issus_date AS "issusDate",
+		a.trip_type AS "tripType",
+		a.position AS "position",
+		a.phone AS "phone",
+		a.ceo AS "ceo",
+		a.ceo_opinion AS "ceoOpinion",
+		a.ceo_audit_date AS "ceoAuditDate",
+		a.deputy_chairman AS "deputyChairman",
+		a.depchair_opinion AS "depchairOpinion",
+		a.depchair_check_date AS "depchairCheckDate"
+	</sql>
+	
+	<sql id="tripJoins">
+	</sql>
+	
+    
+	<select id="get" resultType="Trip" >
+		SELECT 
+			<include refid="tripColumns"/>
+		FROM oa_trip a
+		<include refid="tripJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Trip" >
+		SELECT 
+			<include refid="tripColumns"/>
+		FROM oa_trip a
+		<include refid="tripJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Trip" >
+		SELECT 
+			<include refid="tripColumns"/>
+		FROM oa_trip a
+		<include refid="tripJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_trip(
+			id,
+			process_instance_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			trip_begin_date,
+			trip_end_date,
+			dest_addr,
+			purposes,
+			arrangements,
+			depart_manager,
+			depart_manager_opinion,
+			general_manager,
+			general_manager_opinion,
+			usr_id,
+			en_name,
+			ch_name,
+			staff_no,
+			department,
+			joined_date,
+			ext_no,
+			depart_audit_date,
+			general_audit_date,
+			hr_receive_date,
+			handled_by,
+			issus_date,
+			trip_type,
+			position,
+			phone,
+			ceo,
+			ceo_opinion,
+			ceo_audit_date,
+			deputy_chairman,
+			depchair_opinion,
+			depchair_check_date
+		) VALUES (
+			#{id},
+			#{processInstanceId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{tripBeginDate},
+			#{tripEndDate},
+			#{destAddr},
+			#{purposes},
+			#{arrangements},
+			#{departManager},
+			#{departManagerOpinion},
+			#{generalManager},
+			#{generalManagerOpinion},
+			#{usrId},
+			#{enName},
+			#{chName},
+			#{staffNo},
+			#{department},
+			#{joinedDate},
+			#{extNo},
+			#{departAuditDate},
+			#{generalAuditDate},
+			#{hrReceiveDate},
+			#{handledBy},
+			#{issusDate},
+			#{tripType},
+			#{position},
+			#{phone},
+			#{ceo},
+			#{ceoOpinion},
+			#{ceoAuditDate},
+			#{deputyChairman},
+			#{depchairOpinion},
+			#{depchairCheckDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_trip SET 	
+			process_instance_id = #{processInstanceId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			trip_begin_date = #{tripBeginDate},
+			trip_end_date = #{tripEndDate},
+			dest_addr = #{destAddr},
+			purposes = #{purposes},
+			arrangements = #{arrangements},
+			depart_manager = #{departManager},
+			depart_manager_opinion = #{departManagerOpinion},
+			general_manager = #{generalManager},
+			general_manager_opinion = #{generalManagerOpinion},
+			usr_id = #{usrId},
+			en_name = #{enName},
+			ch_name = #{chName},
+			staff_no = #{staffNo},
+			general_manager = #{generalManager},
+			department = #{department},
+			joined_date = #{joinedDate},
+			ext_no = #{extNo},
+			depart_audit_date = #{departAuditDate},
+			general_audit_date = #{generalAuditDate},
+			hr_receive_date = #{hrReceiveDate},
+			handled_by = #{handledBy},
+			issus_date = #{issusDate},
+			trip_type = #{tripType},
+			position = #{position},
+			phone = #{phone},
+			ceo = #{ceo},
+			ceo_opinion = #{ceoOpinion},
+			ceo_audit_date = #{ceoAuditDate},
+			deputy_chairman = #{deputyChairman},
+			depchair_opinion = #{depchairOpinion},
+			depchair_check_date = #{depchairCheckDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateProcessInstanceId">
+		UPDATE oa_trip SET 
+			process_instance_id = #{processInstanceId}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM oa_trip
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE oa_trip SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Trip" statementType="STATEMENT">
+		select * FROM oa_trip  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

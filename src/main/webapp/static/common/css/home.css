@@ -1,0 +1,38 @@
+.contentBox{
+	width:100%; height: 50%; 
+	padding:5% 20px 5% 20px
+}
+
+.wrap{
+	    width: 100%;
+    height: 100%;
+}
+
+.wrap a{
+	float: left;
+    /* margin-left: 80px; */
+    width: 25%;
+    text-align: center;
+}
+.wrap a:hover{
+    
+    /*-moz-box-shadow: 0 0 5px rgb(142,178,253);/* 老的 Firefox */
+/*box-shadow: 0 0 5px rgb(142,178,253))*/
+}
+
+.wrap a img{
+	width:150px
+}
+
+.wrap a h2{
+	color: rgb(3,37,113)
+}
+
+.table{
+	padding:0px 10%;
+	color:rgb(47, 64, 80);
+}
+
+.more{
+	text-align:right
+}
